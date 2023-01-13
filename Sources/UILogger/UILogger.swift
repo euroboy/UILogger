@@ -2,6 +2,11 @@
 import UIKit
 #endif
 
+@objc public protocol UILoggerDelegate: AnyObject
+{
+    @objc func log(_ log: UILog)
+}
+
 @objc public class UILogger: NSObject
 {
     // MARK: - Singleton
@@ -16,6 +21,9 @@ import UIKit
     private var timer: Timer?
     private let recheckInterval: TimeInterval = 2
     private let timerInterval: TimeInterval = 2
+    
+    // MARK: - Delegate
+    public weak var delegate: UILoggerDelegate?
     
     // MARK: - Inits
     override init()
@@ -114,7 +122,8 @@ import UIKit
             return
         }
         let log = UILog(controller: controller.name, time: Date(), action: action)
-        log.printLog()
+        // log.printLog()
+        delegate?.log(log)
     }
     
     // MARK: - Deinit
