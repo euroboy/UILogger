@@ -2,10 +2,32 @@ import Foundation
 
 public enum ControllerAction: String, Codable
 {
+    case idle
     case appeared
     case disappeared
     case backgrounded
     case foregrounded
+    
+    func isSameLogic(with action: ControllerAction) -> Bool
+    {
+        if self == action
+        {
+            return true
+        }
+        switch self
+        {
+        case .appeared:
+            return action == .foregrounded
+        case .disappeared:
+            return action == .backgrounded
+        case .backgrounded:
+            return action == .disappeared
+        case .foregrounded:
+            return action == .appeared
+        default:
+            return false
+        }
+    }
 }
 
 @objc public class UILog: NSObject, Codable

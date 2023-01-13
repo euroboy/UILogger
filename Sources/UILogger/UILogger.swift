@@ -13,13 +13,11 @@ import UIKit
     @objc public static let shared = UILogger()
     
     // MARK: - Params
-    private var currentController: UIViewController?
-    private var currentAppeared: String?
+    private var currentController: UILogController?
     private var observing: Bool = false
     private var appearObserver: Observer?
     private var disappearObserver: Observer?
     private var timer: Timer?
-    private var appBackgrounded: Bool = false
     private let recheckInterval: TimeInterval = 2
     private let timerInterval: TimeInterval = 2
     
@@ -49,7 +47,6 @@ import UIKit
     private func reset()
     {
         currentController = nil
-        currentAppeared = nil
         appearObserver?.remove()
         disappearObserver?.remove()
         stopTimer()
@@ -72,7 +69,7 @@ import UIKit
         {
             return
         }
-        currentController = topController
+        currentController = UILogController(controller: topController)
         appearObserver?.remove()
         disappearObserver?.remove()
         startTimer()
@@ -97,13 +94,11 @@ import UIKit
     
     private func controllerAppeared(_ controller: UIViewController)
     {
-        guard controller.name == currentController?.name,
-        controller.name != currentAppeared else
+        guard controller.name == currentController?.name else
         {
             return
         }
         logCurrentController(action: .appeared)
-        currentAppeared = controller.name
     }
     
     private func controllerDissapear(_ controller: UIViewController)
@@ -118,10 +113,12 @@ import UIKit
     // MARK: - Logging
     private func logCurrentController(action: ControllerAction)
     {
-        guard let controller = currentController else
+        guard let controller = currentController,
+              action.isSameLogic(with: controller.action) == false else
         {
             return
         }
+        controller.action = action
         let log = UILog(controller: controller.name, time: Date(), action: action)
         // log.printLog()
         delegate?.log(log)
@@ -156,13 +153,13 @@ private extension UILogger
     func checkPresentedController()
     {
         guard let currentController = currentController,
-              let presented = currentController.presentedViewController,
+              let presented = currentController.controller.presentedViewController,
               presented.modalPresentationStyle.invokesLifecycleMethods == false else
         {
             return
         }
         stopTimer()
-        controllerDissapear(currentController)
+        controllerDissapear(currentController.controller)
         checkCurrentController()
     }
 }
@@ -194,17 +191,12 @@ private extension UILogger
                            
     @objc func willResignActive()
     {
+        
         logCurrentController(action: .backgrounded)
-        appBackgrounded = true
     }
     
     @objc func didBecomeActive()
     {
-        guard appBackgrounded else
-        {
-            return
-        }
         logCurrentController(action: .foregrounded)
-        appBackgrounded = false
     }
 }
