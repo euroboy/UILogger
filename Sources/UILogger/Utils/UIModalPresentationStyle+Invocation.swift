@@ -8,7 +8,7 @@ extension UIModalPresentationStyle
     {
         guard #available(iOS 13.0, *) else
         {
-            return false
+            return true
         }
         let invocationStyles: [UIModalPresentationStyle] = [.fullScreen, .currentContext]
         return invocationStyles.contains(self)
