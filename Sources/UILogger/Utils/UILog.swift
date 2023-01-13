@@ -1,6 +1,6 @@
 import Foundation
 
-enum ControllerAction: String
+public enum ControllerAction: String
 {
     case appeared
     case disappeared
@@ -10,9 +10,9 @@ enum ControllerAction: String
 
 @objc public class UILog: NSObject
 {
-    var controller: String
-    var time: Date
-    var action: ControllerAction
+    public var controller: String
+    public var time: Date
+    public var action: ControllerAction
     
     init(controller: String, time: Date, action: ControllerAction)
     {
@@ -21,7 +21,7 @@ enum ControllerAction: String
         self.action = action
     }
     
-    func printLog()
+    public func printLog()
     {
         let marker = "**********"
         let message = marker + " " + controller + " " + action.rawValue.uppercased() + " " + marker
