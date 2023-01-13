@@ -19,6 +19,7 @@ import UIKit
     private var appearObserver: Observer?
     private var disappearObserver: Observer?
     private var timer: Timer?
+    private var appBackgrounded: Bool = false
     private let recheckInterval: TimeInterval = 2
     private let timerInterval: TimeInterval = 2
     
@@ -194,10 +195,16 @@ private extension UILogger
     @objc func willResignActive()
     {
         logCurrentController(action: .backgrounded)
+        appBackgrounded = true
     }
     
     @objc func didBecomeActive()
     {
+        guard appBackgrounded else
+        {
+            return
+        }
         logCurrentController(action: .foregrounded)
+        appBackgrounded = false
     }
 }
