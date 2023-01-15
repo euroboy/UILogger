@@ -8,25 +8,22 @@ public enum ControllerAction: String, Codable
     case backgrounded
     case foregrounded
     
+    var isVisible: Bool
+    {
+        [.appeared, .foregrounded].contains(self)
+    }
+    
     func isSameLogic(with action: ControllerAction) -> Bool
     {
         if self == action
         {
             return true
         }
-        switch self
+        if [self, action].contains(.idle)
         {
-        case .appeared:
-            return action == .foregrounded
-        case .disappeared:
-            return action == .backgrounded
-        case .backgrounded:
-            return action == .disappeared
-        case .foregrounded:
-            return action == .appeared
-        default:
             return false
         }
+        return self.isVisible == action.isVisible
     }
 }
 
