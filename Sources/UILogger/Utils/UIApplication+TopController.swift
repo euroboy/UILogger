@@ -17,6 +17,13 @@ extension UIApplication
                 return appTopController(controller: selected)
             }
         }
+        if let pageController = controller as? UIPageViewController
+        {
+            if let selected = pageController.viewControllers?.first
+            {
+                return appTopController(controller: selected)
+            }
+        }
         if let presented = controller?.presentedViewController
         {
             return appTopController(controller: presented)
