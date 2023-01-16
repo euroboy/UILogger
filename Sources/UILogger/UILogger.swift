@@ -69,6 +69,10 @@ import UIKit
 //        {
 //            return
 //        }
+        guard topController != currentController else
+        {
+            return
+        }
         currentController = UILogController(controller: topController)
         appearObserver?.remove()
         disappearObserver?.remove()
