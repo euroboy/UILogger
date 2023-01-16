@@ -10,7 +10,7 @@ public enum ControllerAction: String, Codable
     
     var isVisible: Bool
     {
-        [.activated, .deactivated].contains(self)
+        [.appeared, .activated].contains(self)
     }
     
     func isSameLogic(with action: ControllerAction) -> Bool
