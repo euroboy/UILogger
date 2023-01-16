@@ -192,11 +192,11 @@ private extension UILogger
     @objc func willResignActive()
     {
         
-        logCurrentController(action: .backgrounded)
+        logCurrentController(action: .deactivated)
     }
     
     @objc func didBecomeActive()
     {
-        logCurrentController(action: .foregrounded)
+        logCurrentController(action: .activated)
     }
 }

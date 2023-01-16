@@ -5,12 +5,12 @@ public enum ControllerAction: String, Codable
     case idle
     case appeared
     case disappeared
-    case backgrounded
-    case foregrounded
+    case deactivated
+    case activated
     
     var isVisible: Bool
     {
-        [.appeared, .foregrounded].contains(self)
+        [.activated, .deactivated].contains(self)
     }
     
     func isSameLogic(with action: ControllerAction) -> Bool

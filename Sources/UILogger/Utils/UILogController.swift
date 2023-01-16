@@ -20,6 +20,6 @@ class UILogController: NSObject
     
     var isVisible: Bool
     {
-        action == .appeared || action == .foregrounded
+        action == .appeared || action == .activated
     }
 }
