@@ -67,12 +67,14 @@ import UIKit
         {
             return
         }
+        let previousController = currentController
         currentController = UILogController(controller: topController)
         stateObserver?.remove()
         startTimer()
         
         stateObserver = topController.observeFinishedState { [weak self] in
             
+            self?.logPreviousDisappearIfNeeded(previousController)
             self?.controllerAppeared(topController)
             
         } onDidDisappear: { [weak self] in
@@ -114,6 +116,22 @@ import UIKit
         }
         controller.action = action
         let log = UILog(controller: controller.name, time: Date(), action: action)
+        processLog(log)
+    }
+    
+    private func logPreviousDisappearIfNeeded(_ previousController: UILogController?)
+    {
+        guard let previousController = previousController,
+              previousController.action.isVisible else
+        {
+            return
+        }
+        let log = UILog(controller: previousController.name, time: Date(), action: .disappeared)
+        processLog(log)
+    }
+    
+    private func processLog(_ log: UILog)
+    {
         // log.printLog()
         delegate?.log(log)
     }
