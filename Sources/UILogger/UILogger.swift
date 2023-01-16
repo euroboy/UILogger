@@ -15,8 +15,7 @@ import UIKit
     // MARK: - Params
     private var currentController: UILogController?
     private var observing: Bool = false
-    private var appearObserver: Observer?
-    private var disappearObserver: Observer?
+    private var stateObserver: Observer?
     private var timer: Timer?
     private let recheckInterval: TimeInterval = 2
     private let timerInterval: TimeInterval = 2
@@ -47,8 +46,7 @@ import UIKit
     private func reset()
     {
         currentController = nil
-        appearObserver?.remove()
-        disappearObserver?.remove()
+        stateObserver?.remove()
         stopTimer()
     }
     
@@ -65,27 +63,19 @@ import UIKit
             }
             return
         }
-//        guard topController.name != currentController?.name else
-//        {
-//            return
-//        }
         guard topController != currentController else
         {
             return
         }
         currentController = UILogController(controller: topController)
-        appearObserver?.remove()
-        disappearObserver?.remove()
+        stateObserver?.remove()
         startTimer()
         
-        // Add appear observer:
-        appearObserver = topController.onViewDidAppear { [weak self] in
+        stateObserver = topController.observeFinishedState { [weak self] in
             
             self?.controllerAppeared(topController)
-        }
-        
-        // Add disappear observer:
-        disappearObserver = topController.onViewDidDisappear { [weak self] in
+            
+        } onDidDisappear: { [weak self] in
             
             self?.controllerDissapear(topController)
             
@@ -150,21 +140,32 @@ private extension UILogger
         stopTimer()
         timer = Timer.scheduledTimer(withTimeInterval: timerInterval, repeats: true, block: { [weak self] _ in
             
-            self?.checkPresentedController()
+            self?.backupCheckings()
         })
     }
     
-    func checkPresentedController()
+    func backupCheckings()
     {
-        guard let currentController = currentController,
-              let presented = currentController.controller.presentedViewController,
-              presented.modalPresentationStyle.invokesLifecycleMethods == false else
+        guard let currentController = currentController else
         {
             return
         }
-        stopTimer()
-        controllerDissapear(currentController.controller)
-        checkCurrentController()
+        
+        // Check presented controller:
+        if let presented = currentController.controller.presentedViewController,
+              presented.modalPresentationStyle.invokesLifecycleMethods == false
+        {
+            stopTimer()
+            controllerDissapear(currentController.controller)
+            checkCurrentController()
+            return
+        }
+        
+        // Log controller appear action if not yet logged:
+        if currentController.action == .idle
+        {
+            controllerAppeared(currentController.controller)
+        }
     }
 }
 

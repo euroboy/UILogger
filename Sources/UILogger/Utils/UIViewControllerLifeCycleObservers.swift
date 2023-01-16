@@ -60,6 +60,21 @@ public extension UIViewController
             viewDidDisappearCallback: callback
         )
     }
+    
+    /// Event that notifies the view controller was added or removed from view hierarchy.
+    ///
+    /// - Parameter onDidAppear: The closure to execute on appear
+    /// - Parameter onDidDisappear: The closure to execute on disappear
+    /// - Returns: The observer for unsubscribing to event.
+    @discardableResult
+    func observeFinishedState(onDidAppear: @escaping () -> Void, onDidDisappear: @escaping () -> Void) -> Observer
+    {
+        return ViewControllerLifecycleObserver(
+            parent: self,
+            viewDidAppearCallback: onDidAppear,
+            viewDidDisappearCallback: onDidDisappear
+        )
+    }
 }
 
 private class ViewControllerLifecycleObserver: UIViewController, Observer
@@ -123,5 +138,14 @@ private class ViewControllerLifecycleObserver: UIViewController, Observer
         willMove(toParent: nil)
         view.removeFromSuperview()
         removeFromParent()
+        resetCallbacks()
+    }
+    
+    private func resetCallbacks()
+    {
+        viewWillAppearCallback = nil
+        viewDidAppearCallback = nil
+        viewWillDisappearCallback = nil
+        viewDidDisappearCallback = nil
     }
 }
