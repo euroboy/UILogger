@@ -210,7 +210,6 @@ private extension UILogger
                            
     @objc func willResignActive()
     {
-        
         logCurrentController(action: .deactivated)
     }
     
