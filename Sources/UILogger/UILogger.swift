@@ -151,6 +151,10 @@ private extension UILogger
     func startTimer()
     {
         stopTimer()
+        guard #available(iOS 10.0, *) else
+        {
+            return
+        }
         timer = Timer.scheduledTimer(withTimeInterval: timerInterval, repeats: true, block: { [weak self] _ in
             
             self?.backupCheckings()
