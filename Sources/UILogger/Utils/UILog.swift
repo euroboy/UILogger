@@ -99,8 +99,7 @@ private extension TimeInterval
     {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.day, .hour, .minute, .second]
-        formatter.unitsStyle = .short
-        formatter.maximumUnitCount = 2
+        formatter.unitsStyle = .full
         return formatter.string(from: self)
     }
 }
