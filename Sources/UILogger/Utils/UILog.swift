@@ -7,6 +7,7 @@ public enum ControllerAction: String, Codable
     case disappeared
     case deactivated
     case activated
+    case terminated
     
     var isVisible: Bool
     {

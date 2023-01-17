@@ -7,22 +7,26 @@ extension UILogger
         switch log.action
         {
         case .appeared:
+            timing.reset()
             timing.appearTime = log.time
-            timing.duration = 0
-            delegate?.logInAppNavigation(log)
         case .disappeared:
             timing.disappearTime = log.time
             log.duration = timing.duration
-            delegate?.logInAppNavigation(log)
+            timing.reset()
         case .activated:
             timing.appearTime = log.time
-            delegate?.logAllNavigation(log)
         case .deactivated:
             timing.disappearTime = log.time
-            delegate?.logAllNavigation(log)
+        case .terminated:
+            if timing.disappearTime == nil
+            {
+                timing.disappearTime = log.time
+            }
+            log.duration = timing.duration
         default:
             break
         }
         // log.printLog()
+        delegate?.log(log)
     }
 }

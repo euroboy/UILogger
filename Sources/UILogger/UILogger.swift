@@ -4,8 +4,7 @@ import UIKit
 
 @objc public protocol UILoggerDelegate: AnyObject
 {
-    @objc func logInAppNavigation(_ log: UILog)
-    @objc func logAllNavigation(_ log: UILog)
+    @objc func log(_ log: UILog)
 }
 
 @objc public class UILogger: NSObject
@@ -193,6 +192,7 @@ private extension UILogger
         center.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         center.addObserver(self, selector: #selector(willResignActive), name: UIApplication.willResignActiveNotification, object: nil)
         center.addObserver(self, selector: #selector(didBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        center.addObserver(self, selector: #selector(willTerminate), name: UIApplication.willTerminateNotification, object: nil)
     }
     
     func removeLifecycleObservers()
@@ -217,5 +217,10 @@ private extension UILogger
     @objc func didBecomeActive()
     {
         logCurrentController(action: .activated)
+    }
+    
+    @objc func willTerminate()
+    {
+        logCurrentController(action: .terminated)
     }
 }

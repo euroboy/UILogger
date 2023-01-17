@@ -22,4 +22,11 @@ struct UILogTiming
         let interval = abs(appearTime.timeIntervalSince(disappearTime))
         duration += interval
     }
+    
+    mutating func reset()
+    {
+        appearTime = nil
+        disappearTime = nil
+        duration = 0
+    }
 }
