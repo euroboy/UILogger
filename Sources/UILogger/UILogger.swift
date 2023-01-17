@@ -4,7 +4,8 @@ import UIKit
 
 @objc public protocol UILoggerDelegate: AnyObject
 {
-    @objc func log(_ log: UILog)
+    @objc func logInAppNavigation(_ log: UILog)
+    @objc func logAllNavigation(_ log: UILog)
 }
 
 @objc public class UILogger: NSObject
@@ -19,6 +20,7 @@ import UIKit
     private var timer: Timer?
     private let recheckInterval: TimeInterval = 2
     private let timerInterval: TimeInterval = 2
+    lazy var timing = UILogTiming()
     
     // MARK: - Delegate
     public weak var delegate: UILoggerDelegate?
@@ -79,7 +81,7 @@ import UIKit
             
         } onDidDisappear: { [weak self] in
             
-            self?.controllerDissapear(topController)
+            self?.controllerDissapeared(topController)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
                 
@@ -97,7 +99,7 @@ import UIKit
         logCurrentController(action: .appeared)
     }
     
-    private func controllerDissapear(_ controller: UIViewController)
+    private func controllerDissapeared(_ controller: UIViewController)
     {
         guard controller.name == currentController?.name else
         {
@@ -128,12 +130,6 @@ import UIKit
         }
         let log = UILog(controller: previousController.name, time: Date(), action: .disappeared)
         processLog(log)
-    }
-    
-    private func processLog(_ log: UILog)
-    {
-        // log.printLog()
-        delegate?.log(log)
     }
     
     // MARK: - Deinit
@@ -174,7 +170,7 @@ private extension UILogger
               presented.modalPresentationStyle.invokesLifecycleMethods == false
         {
             stopTimer()
-            controllerDissapear(currentController.controller)
+            controllerDissapeared(currentController.controller)
             checkCurrentController()
             return
         }

@@ -25,6 +25,19 @@ public enum ControllerAction: String, Codable
         }
         return self.isVisible == action.isVisible
     }
+    
+    var name: String
+    {
+        switch self
+        {
+        case .deactivated:
+            return Self.disappeared.rawValue
+        case .activated:
+            return Self.appeared.rawValue
+        default:
+            return rawValue
+        }
+    }
 }
 
 @objc public class UILog: NSObject, Codable
@@ -32,6 +45,7 @@ public enum ControllerAction: String, Codable
     public var controller: String
     public var time: Date
     public var action: ControllerAction
+    public var duration: TimeInterval?
     
     init(controller: String, time: Date, action: ControllerAction)
     {
@@ -43,7 +57,12 @@ public enum ControllerAction: String, Codable
     public func printLog()
     {
         let marker = "**********"
-        let message = marker + " " + controller + " " + action.rawValue.uppercased() + " " + marker
+        var timeInfo = ""
+        if let duration = duration?.humanReadableDuration
+        {
+            timeInfo = duration + " "
+        }
+        let message = marker + " " + controller + " " + action.rawValue.uppercased() + " " + timeInfo + marker
         print(message)
     }
     
@@ -69,5 +88,18 @@ public enum ControllerAction: String, Codable
         try container.encode(controller, forKey: .controller)
         try container.encode(time, forKey: .time)
         try container.encode(action, forKey: .action)
+    }
+}
+
+// MARK: - Formatted duration
+private extension TimeInterval
+{
+    var humanReadableDuration: String?
+    {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.day, .hour, .minute, .second]
+        formatter.unitsStyle = .short
+        formatter.maximumUnitCount = 2
+        return formatter.string(from: self)
     }
 }
