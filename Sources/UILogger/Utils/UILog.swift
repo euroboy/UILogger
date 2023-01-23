@@ -7,11 +7,13 @@ public enum ControllerAction: String, Codable
     case disappeared
     case deactivated
     case activated
+    case backgrounded
+    case foregrounded
     case terminated
     
     var isVisible: Bool
     {
-        [.appeared, .activated].contains(self)
+        [.appeared, .activated, .foregrounded].contains(self)
     }
     
     func isSameLogic(with action: ControllerAction) -> Bool
@@ -29,15 +31,7 @@ public enum ControllerAction: String, Codable
     
     var name: String
     {
-        switch self
-        {
-        case .deactivated:
-            return Self.disappeared.rawValue
-        case .activated:
-            return Self.appeared.rawValue
-        default:
-            return rawValue
-        }
+        return rawValue
     }
 }
 

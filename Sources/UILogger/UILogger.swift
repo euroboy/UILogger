@@ -206,10 +206,12 @@ private extension UILogger
     
     @objc func didEnterBackground()
     {
+        logCurrentController(action: .backgrounded)
     }
     
     @objc func willEnterForeground()
     {
+        logCurrentController(action: .foregrounded)
     }
                            
     @objc func willResignActive()

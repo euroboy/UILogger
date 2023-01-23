@@ -17,6 +17,12 @@ extension UILogger
             timing.appearTime = log.time
         case .deactivated:
             timing.disappearTime = log.time
+        case .backgrounded:
+            // timing logic is handled by `deactivated` action
+            break
+        case .foregrounded:
+            // timing logic is handled by `activated` action
+            break
         case .terminated:
             if timing.disappearTime == nil
             {
