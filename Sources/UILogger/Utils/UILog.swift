@@ -26,6 +26,14 @@ public enum ControllerAction: String, Codable
         {
             return false
         }
+        if [self, action].contains(.deactivated) && [self, action].contains(.backgrounded)
+        {
+            return false
+        }
+        if [self, action].contains(.activated) && [self, action].contains(.foregrounded)
+        {
+            return false
+        }
         return self.isVisible == action.isVisible
     }
     

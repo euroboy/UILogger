@@ -110,8 +110,11 @@ import UIKit
     // MARK: - Logging
     private func logCurrentController(action: ControllerAction)
     {
-        guard let controller = currentController,
-              action.isSameLogic(with: controller.action) == false else
+        guard let controller = currentController else
+        {
+            return
+        }
+        guard action.isSameLogic(with: controller.action) == false else
         {
             return
         }
@@ -216,9 +219,6 @@ private extension UILogger
                            
     @objc func willResignActive()
     {
-        let state = UIApplication.shared.applicationState
-        
-        // check if going to background !!!!
         logCurrentController(action: .deactivated)
     }
     
