@@ -216,6 +216,9 @@ private extension UILogger
                            
     @objc func willResignActive()
     {
+        let state = UIApplication.shared.applicationState
+        
+        // check if going to background !!!!
         logCurrentController(action: .deactivated)
     }
     

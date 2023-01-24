@@ -28,6 +28,13 @@ extension UIApplication
         {
             return appTopController(controller: presented)
         }
+        if let childPageController = controller?.children.first(where: { $0 is UIPageViewController }) as? UIPageViewController
+        {
+            if let selected = childPageController.viewControllers?.first
+            {
+                return appTopController(controller: selected)
+            }
+        }
         return controller
     }
 }

@@ -29,9 +29,17 @@ public enum ControllerAction: String, Codable
         return self.isVisible == action.isVisible
     }
     
-    var name: String
+    public var name: String
     {
-        return rawValue
+        switch self
+        {
+        case .deactivated:
+            return "resigned active"
+        case .activated:
+            return "became active"
+        default:
+            return rawValue
+        }
     }
 }
 

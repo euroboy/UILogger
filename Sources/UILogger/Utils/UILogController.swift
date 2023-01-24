@@ -17,9 +17,4 @@ class UILogController: NSObject
     {
         controller.name
     }
-    
-    var isVisible: Bool
-    {
-        action == .appeared || action == .activated
-    }
 }
