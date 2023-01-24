@@ -22,6 +22,10 @@ public enum ControllerAction: String, Codable
         {
             return true
         }
+        
+        // Monitoring all events for now:
+        return false
+        
         if [self, action].contains(.idle)
         {
             return false
